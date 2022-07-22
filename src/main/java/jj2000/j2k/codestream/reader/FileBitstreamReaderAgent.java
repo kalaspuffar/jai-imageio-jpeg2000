@@ -515,9 +515,10 @@ public class FileBitstreamReaderAgent extends BitstreamReaderAgent
         boolean isEOFEncountered = false;
         try {
             int tpNum = 0;
-            while(remainingTileParts!=0 &&
-                  (totTileParts[tileNum] == 0 ||
-                   tilePartsRead[tileNum] < totTileParts[tileNum])) {
+            while(remainingTileParts!=0
+                && (totTileParts[tileNum] == 0 || tilePartsRead[tileNum] < totTileParts[tileNum])
+                && !(tilePartPositions != null && tpNum == tilePartPositions[tileNum].length))
+            {
                 isTilePartRead = true;
 
                 if(tilePartPositions != null) {
@@ -756,6 +757,12 @@ public class FileBitstreamReaderAgent extends BitstreamReaderAgent
      * @return The tile number of the tile part that was read
      * */
     private int readTilePartHeader() throws IOException{
+        if (in.getPos() == in.length()) {
+            // This block is needed when we add one to the number of
+            // tile parts - see line 811.
+            isEOCFound = true;  // Not strictly true.
+            return -1;
+        }
         HeaderInfo.SOT ms = hi.getNewSOT();
 
         // SOT marker
@@ -857,6 +864,12 @@ public class FileBitstreamReaderAgent extends BitstreamReaderAgent
                 tilePartHeadLen[tile][i] = tmpA[i];
             }
         } else { // The number of tile-parts is specified in the tile-part
+	        // SPEC DEVIATION: Spec declares TNsot as "Number of tile-parts of a tile in the codestream",
+	        // but many images seem to treat this value as "Maximum number of tile parts", i.e. one more.
+	        // Reading less tiles than expected is handled, so we can safely increase this value by
+	        // one for images.
+	        nrOfTileParts++;
+	        
             // header
             totTileParts[tile] = nrOfTileParts;
 
