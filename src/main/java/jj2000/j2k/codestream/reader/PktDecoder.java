@@ -776,7 +776,15 @@ public class PktDecoder implements StdEntropyCoderOptions{
      * */
     public boolean readPktHead(int l,int r,int c,int p,CBlkInfo[][][] cbI,
                                int[] nb) throws IOException {
+        try {
+            return readPktHeadInternal(l, r, c, p, cbI, nb);
+        } catch (EOFException e) {
+            return true;
+        }
+    }
 
+    private boolean readPktHeadInternal(int l,int r,int c,int p,CBlkInfo[][][] cbI,
+                               int[] nb) throws IOException {
         CBlkInfo ccb;
         int nSeg;                   // number of segment to read
         int cbLen;                  // Length of cblk's code-words

@@ -113,7 +113,7 @@ class PktHeaderBitReader {
      *
      * @exception IOException If an I/O error occurred
      *
-     * @exception EOFException If teh end of file has been reached
+     * @exception EOFException If the end of file has been reached
      *
      * */
     final int readBit() throws IOException {
@@ -134,6 +134,9 @@ class PktHeaderBitReader {
             else { // We had bit stuffing, nextbuf can not be 0xFF
                 bbuf = nextbbuf;
                 bpos = 7;
+            }
+            if (bbuf == -1) {
+                throw new EOFException("Could not read next bit. End of stream reached");
             }
         }
         return (bbuf >> --bpos) & 0x01;
@@ -187,6 +190,9 @@ class PktHeaderBitReader {
                 else { // We had bit stuffing, nextbuf can not be 0xFF
                     bbuf = nextbbuf;
                     bpos = 7;
+                }
+                if (bbuf == -1) {
+                    throw new EOFException("Could not read bits. End of stream reached");
                 }
             } while (n > bpos);
             // Get the last bits, if any
