@@ -61,6 +61,7 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.util.Hashtable;
 
+import javax.imageio.IIOException;
 import javax.imageio.ImageTypeSpecifier;
 import javax.imageio.stream.ImageInputStream;
 
@@ -349,10 +350,12 @@ public class J2KReadState {
         int y = destinationRegion.y;
         destinationRegion.setLocation(j2krparam.getDestinationOffset());
         if (image == null) {
-            // If the destination type is specified, use the color model of it.
+        	if ( sampleModel==null ) throw new IIOException("Sample model is null");
+
+        	// If the destination type is specified, use the color model of it.
             ImageTypeSpecifier type = j2krparam.getDestinationType();
-            if (type != null)
-                colorModel = type.getColorModel();
+            if (type != null) colorModel = type.getColorModel();
+            if ( colorModel==null ) throw new IIOException("Color model is null");
 
             raster = Raster.createWritableRaster(
                 sampleModel.createCompatibleSampleModel(destinationRegion.x +
@@ -360,11 +363,13 @@ public class J2KReadState {
                                                         destinationRegion.y +
                                                         destinationRegion.height),
                 new Point(0, 0));
-            image = new BufferedImage(colorModel, raster,
+
+          	image = new BufferedImage(colorModel, raster,
                                       colorModel.isAlphaPremultiplied(),
                                       new Hashtable());
-        } else
+        } else {
             raster = image.getWritableTile(0, 0);
+        }
 
         destImage = image;
         readSubsampledRaster(raster);
