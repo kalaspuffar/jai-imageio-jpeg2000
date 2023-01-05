@@ -168,6 +168,7 @@
 	<artifactId>versions-maven-plugin</artifactId>
 	<version>2.5</version>
       </plugin>
+      <!--
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
@@ -187,6 +188,7 @@
           </links>
         </configuration>
       </plugin>
+      -->
     </plugins>
   </build>
 
@@ -216,18 +218,23 @@
   </profiles>
 
     <dependencies>
-      <dependency>
-        <groupId>${project.groupId}</groupId>
-        <artifactId>jai-imageio-core</artifactId>
-      <version>${jaiimageio.core.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>junit</groupId>
-        <artifactId>junit</artifactId>
-        <version>4.13.1</version>
-        <type>jar</type>
-        <scope>test</scope>
-      </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>jai-imageio-core</artifactId>
+            <version>${jaiimageio.core.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.12</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.1</version>
+            <type>jar</type>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     <reporting>
       <plugins>

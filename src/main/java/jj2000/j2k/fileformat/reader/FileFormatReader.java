@@ -299,6 +299,14 @@ public class FileFormatReader implements FileFormatBoxes{
                           "missing");
         }
 
+        if (maps != null) {
+            for (int i = 0; i < maps.length; i++) {
+                if (lut.length < (maps[i] & 0xFF)) {
+                    maps[i] = 0;
+                }
+            }
+        }
+
         return;
     }
 
@@ -680,15 +688,15 @@ public class FileFormatReader implements FileFormatBoxes{
             }
             if (numComp == 3)
                 colorModel = new IndexColorModel(maxDepth, lut[0].length,
-                                                 lut[maps[0]],
-                                                 lut[maps[1]],
-                                                 lut[maps[2]]);
+                                                 lut[maps[0] & 0xFF],
+                                                 lut[maps[1] & 0xFF],
+                                                 lut[maps[2] & 0xFF]);
             else if (numComp == 4)
                 colorModel = new IndexColorModel(maxDepth, lut[0].length,
-                                                 lut[maps[0]],
-                                                 lut[maps[1]],
-                                                 lut[maps[2]],
-                                                 lut[maps[3]]);
+                                                 lut[maps[0] & 0xFF],
+                                                 lut[maps[1] & 0xFF],
+                                                 lut[maps[2] & 0xFF],
+                                                 lut[maps[3] & 0xFF]);
         } else if (channels != null){
             boolean hasAlpha = false;
             int alphaChannel = numComp - 1;

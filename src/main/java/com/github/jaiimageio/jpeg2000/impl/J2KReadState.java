@@ -80,8 +80,11 @@ import jj2000.j2k.roi.ROIDeScaler;
 import jj2000.j2k.wavelet.synthesis.InverseWT;
 
 import com.github.jaiimageio.impl.common.ImageUtil;
+import org.apache.log4j.Logger;
 
 public class J2KReadState {
+    private static final Logger logger = Logger.getLogger(J2KReadState.class.getName());
+
     /** The input stream we read from */
     private ImageInputStream iis = null;
 
@@ -364,9 +367,14 @@ public class J2KReadState {
                                                         destinationRegion.height),
                 new Point(0, 0));
 
-          	image = new BufferedImage(colorModel, raster,
-                                      colorModel.isAlphaPremultiplied(),
-                                      new Hashtable());
+            try {
+                image = new BufferedImage(colorModel, raster,
+                        colorModel.isAlphaPremultiplied(),
+                        new Hashtable());
+            } catch (Exception e) {
+                logger.info(e);
+                image = new BufferedImage(1,1, BufferedImage.TYPE_INT_RGB);
+            }
         } else {
             raster = image.getWritableTile(0, 0);
         }
