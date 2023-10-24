@@ -685,6 +685,9 @@ public class FileFormatReader implements FileFormatBoxes{
                 maps = new byte[numComp];
                 for (int i = 0; i < numComp; i++)
                     maps[i] = (byte)i;
+            } else {
+                for (int i = 0; i < numComp; i++)
+                    maps[i] = maps[i] < numComp ? maps[i] : 0;
             }
             if (numComp == 3)
                 colorModel = new IndexColorModel(maxDepth, lut[0].length,
