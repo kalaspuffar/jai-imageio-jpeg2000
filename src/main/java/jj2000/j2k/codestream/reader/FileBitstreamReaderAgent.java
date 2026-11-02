@@ -540,7 +540,9 @@ public class FileBitstreamReaderAgent extends BitstreamReaderAgent
                         tilePartLen[t][tp] = in.length()-2-tilePartStart;
                     }
                 } catch(EOFException e) {
-                    firstPackOff[t][tp] = in.length();
+                    if(t != -1) {
+                        firstPackOff[t][tp] = in.length();
+                    }
                     throw e;
                 }
 
